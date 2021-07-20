@@ -7,7 +7,15 @@ import {
   Heading,
   Input,
   Link,
+  Table,
+  TableCaption,
+  Tbody,
+  Td,
   Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   VStack,
 } from "@chakra-ui/react";
 import Head from "next/head";
@@ -25,18 +33,27 @@ export default function Home() {
   const [returnAmountCurrency, setReturnAmountCurrency] = useState<Currency[]>(
     []
   );
+  const reset = () => {
+    setbillAmount(0);
+    setCashGiven(0);
+    setReturnAmount(0);
+    setReturnAmountVisible(false);
+    setReturnAmountText("");
+    setCashGivenVisible(false);
+    setReturnAmountCurrency([]);
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setReturnAmount(cashGiven - billAmount);
     if (cashGiven - billAmount < 0) {
       setReturnAmountText(
-        `Customer need to pay  ${billAmount - cashGiven} more`
+        `Customer need to pay $${billAmount - cashGiven} more`
       );
     } else if (cashGiven - billAmount == 0) {
       setReturnAmountText(`All clear`);
     } else {
-      setReturnAmountText("You need to return" + (cashGiven - billAmount));
+      setReturnAmountText("You need to return $" + (cashGiven - billAmount));
     }
     setReturnAmountVisible(true);
     setReturnAmountCurrency(countCurrency(cashGiven - billAmount));
@@ -109,6 +126,13 @@ export default function Home() {
           {returnAmountVisible && (
             <>
               <VStack className={styles.returnAmount} mt="3">
+                <Button
+                  onClick={() => reset()}
+                  colorScheme="messenger"
+                  variant="ghost"
+                >
+                  Reset
+                </Button>
                 <Heading
                   textAlign="center"
                   className={styles.returnAmountTitle}
@@ -116,20 +140,54 @@ export default function Home() {
                 >
                   Return Amount:
                 </Heading>
-                <p className={styles.returnAmountText}>{returnAmountText}</p>
+                <Text className={styles.returnAmountText}>
+                  {returnAmountText}
+                </Text>
               </VStack>
-              <div className={styles.returnAmountCurrency}>
-                {returnAmountCurrency.map((currency, index) => (
-                  <div key={index} className={styles.returnAmountCurrency}>
-                    <h2 className={styles.returnAmountCurrencyTitle}>
-                      {currency.note}
-                    </h2>
-                    <p className={styles.returnAmountCurrencyText}>
-                      {currency.count}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              {returnAmount > 0 && (
+                <>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>Note Type</Th>
+                        <Th>Count</Th>
+                        <Th>Total</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {returnAmountCurrency.map((item, index) => (
+                        <Tr key={index}>
+                          <Td>{item.note}</Td>
+                          <Td>{item.count}</Td>
+                          <Td>{item.note * item.count}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                    <Tfoot>
+                      <Tr>
+                        <Th>.</Th>
+                        <Th>Total Count</Th>
+                        <Th>Total Amount</Th>
+                      </Tr>
+                      <Tr>
+                        <Td>.</Td>
+                        <Td>
+                          {returnAmountCurrency.reduce(
+                            (a, c) => a + c.count,
+                            0
+                          )}
+                        </Td>
+                        <Td>
+                          {returnAmountCurrency.reduce(
+                            (a, c) => a + c.count * c.note,
+                            0
+                          )}
+                        </Td>
+                      </Tr>
+                    </Tfoot>
+                  </Table>
+                </>
+              )}
             </>
           )}
         </Box>
