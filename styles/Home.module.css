@@ -26,13 +26,6 @@
   align-items: center;
 }
 
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-}
-
 .title a {
   color: #0070f3;
   text-decoration: none;
@@ -118,4 +111,11 @@
     width: 100%;
     flex-direction: column;
   }
+}
+.form {
+  display: flex;
+  flex-direction: column;
+}
+.returnAmountCurrency {
+  display: flex;
 }
