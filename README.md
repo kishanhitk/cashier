@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Cashier
+## One stop cash management!
+### Try [here](https://ecstatic-brattain-10f2c6.netlify.app/)
 
 ## Getting Started
 
